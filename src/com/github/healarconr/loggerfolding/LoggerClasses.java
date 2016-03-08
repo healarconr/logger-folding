@@ -1,6 +1,5 @@
 package com.github.healarconr.loggerfolding;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -8,6 +7,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Represents a collection of Logger classes which method calls should be folded. Contains classes for JUL, slf4j, Apache Commons
+ * Logging and log4j.
+ *
  * @author <a href="mailto:hernaneduardoalarcon@gmail.com">Hernán Alarcón</a>
  */
 public final class LoggerClasses {
@@ -28,7 +30,12 @@ public final class LoggerClasses {
 		super();
 	}
 
-	@NotNull
+	/**
+	 * Determines if a given class name corresponds to the name of one of the registered logger classes
+	 *
+	 * @param className the class name
+	 * @return true if the class name is one of the registered logger classes
+	 */
 	public static boolean contains(@Nullable String className) {
 
 		return LOGGER_CLASSES.contains(className);

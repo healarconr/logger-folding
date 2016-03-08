@@ -14,11 +14,13 @@ import org.jetbrains.annotations.Nullable;
 
 import static com.github.healarconr.loggerfolding.ActionHelper.isAvailable;
 import static com.github.healarconr.loggerfolding.PsiHelper.getTextRange;
-import static com.github.healarconr.loggerfolding.PsiHelper.isAMethodCallOnALogger;
+import static com.github.healarconr.loggerfolding.PsiHelper.isALoggerMethodCall;
 import static com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR;
 import static com.intellij.openapi.actionSystem.CommonDataKeys.PSI_FILE;
 
 /**
+ * Action to unfold logger method calls
+ *
  * @author <a href="mailto:hernaneduardoalarcon@gmail.com">Hernán Alarcón</a>
  */
 public class UnfoldLoggerMethodCallsAction extends AnAction {
@@ -43,12 +45,12 @@ public class UnfoldLoggerMethodCallsAction extends AnAction {
 
 					super.visitElement(element);
 
-					if (isAMethodCallOnALogger(element)) {
+					if (isALoggerMethodCall(element)) {
 						PsiMethodCallExpression methodCallExpression = (PsiMethodCallExpression) element;
 						TextRange textRange = getTextRange(methodCallExpression);
 						FoldRegion foldRegion = getFoldRegion(editor, textRange);
 						if (foldRegion != null) {
-							remove(editor, foldRegion);
+							removeFoldRegion(editor, foldRegion);
 						}
 					}
 				}
@@ -57,13 +59,26 @@ public class UnfoldLoggerMethodCallsAction extends AnAction {
 
 	}
 
+	/**
+	 * Returns the fold region that matches the provided text range
+	 *
+	 * @param editor    the editor
+	 * @param textRange the text range
+	 * @return the fold region
+	 */
 	@Nullable
 	private FoldRegion getFoldRegion(@NotNull Editor editor, @NotNull TextRange textRange) {
 
 		return editor.getFoldingModel().getFoldRegion(textRange.getStartOffset(), textRange.getEndOffset());
 	}
 
-	private void remove(@NotNull final Editor editor, @NotNull final FoldRegion foldRegion) {
+	/**
+	 * Runs a batch folding operation that removes the given fold region from the editor folding model
+	 *
+	 * @param editor     the editor
+	 * @param foldRegion the fold region to remove
+	 */
+	private void removeFoldRegion(@NotNull final Editor editor, @NotNull final FoldRegion foldRegion) {
 
 		editor.getFoldingModel().runBatchFoldingOperation(new Runnable() {
 			@Override
