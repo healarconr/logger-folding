@@ -1,0 +1,38 @@
+<idea-plugin version="2">
+    <id>com.github.healarconr.loggerfolding</id>
+    <name>Logger folding</name>
+    <version>0.1.0</version>
+    <vendor email="hernaneduardoalarcon@gmail.com" url="https://github.com/healarconr">Hernan Alarcon</vendor>
+
+    <description><![CDATA[
+        <p>Folds and unfolds logger method calls. Supports JUL, slf4j, Apache Commons Logging and log4j</p>
+    ]]></description>
+
+    <change-notes><![CDATA[
+        <p>0.1.0</p>
+        <ul>
+            <li>First version with folding and unfolding support for JUL, slf4j, Apache Commons Logging and log4j</li>
+        </ul>
+    ]]></change-notes>
+
+    <idea-version since-build="143.0"/>
+
+    <extensions defaultExtensionNs="com.intellij">
+    </extensions>
+
+    <actions>
+        <action id="com.github.healarconr.loggerfolding.FoldLoggerMethodCallsAction"
+                class="com.github.healarconr.loggerfolding.FoldLoggerMethodCallsAction"
+                text="Fold logger method calls" description="Folds logger method calls">
+            <add-to-group group-id="FoldingGroup"/>
+            <keyboard-shortcut first-keystroke="altGraph L" keymap="$default"/>
+        </action>
+        <action id="com.github.healarconr.loggerfolding.UnfoldLoggerMethodCallsAction"
+                class="com.github.healarconr.loggerfolding.UnfoldLoggerMethodCallsAction"
+                text="Unfold logger method calls" description="Unfolds logger method calls">
+            <add-to-group group-id="FoldingGroup"/>
+            <keyboard-shortcut first-keystroke="altGraph shift L" keymap="$default"/>
+        </action>
+    </actions>
+
+</idea-plugin>
