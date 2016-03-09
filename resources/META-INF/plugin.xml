@@ -5,7 +5,12 @@
     <vendor email="hernaneduardoalarcon@gmail.com" url="https://github.com/healarconr">Hernan Alarcon</vendor>
 
     <description><![CDATA[
-        <p>Folds and unfolds logger method calls. Supports JUL, slf4j, Apache Commons Logging and log4j</p>
+        <p>Folds and unfolds logger method calls in Java classes. Supports JUL, slf4j, Apache Commons Logging and log4j</p>
+        <p>Provides two new actions under the Code > Folding menu:</p>
+        <ul>
+            <li>Fold logger method calls (Alt Gr + L)</li>
+            <li>Unfold logger method calls (Shift + Alt Gr + L)</li>
+        </ul>
     ]]></description>
 
     <change-notes><![CDATA[
@@ -16,6 +21,8 @@
     ]]></change-notes>
 
     <idea-version since-build="143.0"/>
+
+    <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
     </extensions>
