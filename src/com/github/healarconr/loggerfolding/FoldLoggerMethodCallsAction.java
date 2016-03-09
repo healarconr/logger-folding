@@ -24,70 +24,70 @@ import static com.intellij.openapi.actionSystem.CommonDataKeys.PSI_FILE;
  */
 public class FoldLoggerMethodCallsAction extends AnAction {
 
-	@Override
-	public void update(AnActionEvent actionEvent) {
+  @Override
+  public void update(AnActionEvent actionEvent) {
 
-		actionEvent.getPresentation().setVisible(isAvailable(actionEvent));
-	}
+    actionEvent.getPresentation().setVisible(isAvailable(actionEvent));
+  }
 
-	@Override
-	public void actionPerformed(AnActionEvent actionEvent) {
+  @Override
+  public void actionPerformed(AnActionEvent actionEvent) {
 
-		if (isAvailable(actionEvent)) {
-			final Editor editor = actionEvent.getRequiredData(EDITOR);
-			PsiJavaFile psiJavaFile = (PsiJavaFile) actionEvent.getRequiredData(PSI_FILE);
+    if (isAvailable(actionEvent)) {
+      final Editor editor = actionEvent.getRequiredData(EDITOR);
+      PsiJavaFile psiJavaFile = (PsiJavaFile) actionEvent.getRequiredData(PSI_FILE);
 
-			psiJavaFile.accept(new PsiRecursiveElementWalkingVisitor() {
+      psiJavaFile.accept(new PsiRecursiveElementWalkingVisitor() {
 
-				@Override
-				public void visitElement(PsiElement element) {
+        @Override
+        public void visitElement(PsiElement element) {
 
-					super.visitElement(element);
-					if (isALoggerMethodCall(element)) {
-						PsiMethodCallExpression methodCallExpression = (PsiMethodCallExpression) element;
-						TextRange textRange = getTextRange(methodCallExpression);
-						String placeholderText = getPlaceholderText(methodCallExpression);
-						fold(editor, textRange, placeholderText);
-					}
-				}
-			});
-		}
-	}
+          super.visitElement(element);
+          if (isALoggerMethodCall(element)) {
+            PsiMethodCallExpression methodCallExpression = (PsiMethodCallExpression) element;
+            TextRange textRange = getTextRange(methodCallExpression);
+            String placeholderText = getPlaceholderText(methodCallExpression);
+            fold(editor, textRange, placeholderText);
+          }
+        }
+      });
+    }
+  }
 
-	/**
-	 * Returns the placeholder text used in the fold region for a logger method call
-	 *
-	 * @param methodCallExpression the method call expression
-	 * @return the method expression text followed by "(...);"
-	 */
-	@NotNull
-	private String getPlaceholderText(@NotNull PsiMethodCallExpression methodCallExpression) {
+  /**
+   * Returns the placeholder text used in the fold region for a logger method call
+   *
+   * @param methodCallExpression the method call expression
+   * @return the method expression text followed by "(...);"
+   */
+  @NotNull
+  private String getPlaceholderText(@NotNull PsiMethodCallExpression methodCallExpression) {
 
-		return methodCallExpression.getMethodExpression().getText() + "(...);";
-	}
+    return methodCallExpression.getMethodExpression().getText() + "(...);";
+  }
 
-	/**
-	 * Runs a batch folding operation that folds the given text range
-	 *
-	 * @param editor          the editor to get the folding model
-	 * @param textRange       the text range to fold
-	 * @param placeholderText the fold region placeholder text
-	 */
-	private void fold(@NotNull final Editor editor, @NotNull final TextRange textRange, @NotNull final String placeholderText) {
+  /**
+   * Runs a batch folding operation that folds the given text range
+   *
+   * @param editor          the editor to get the folding model
+   * @param textRange       the text range to fold
+   * @param placeholderText the fold region placeholder text
+   */
+  private void fold(@NotNull final Editor editor, @NotNull final TextRange textRange, @NotNull final String placeholderText) {
 
-		editor.getFoldingModel().runBatchFoldingOperation(new Runnable() {
+    editor.getFoldingModel().runBatchFoldingOperation(new Runnable() {
 
-			@Override
-			public void run() {
+      @Override
+      public void run() {
 
-				FoldRegion foldRegion = editor.getFoldingModel()
-											  .addFoldRegion(textRange.getStartOffset(), textRange.getEndOffset(),
-													  placeholderText);
-				if (foldRegion != null) {
-					foldRegion.setExpanded(false);
-				}
-			}
-		});
-	}
+        FoldRegion foldRegion = editor.getFoldingModel()
+            .addFoldRegion(textRange.getStartOffset(), textRange.getEndOffset(),
+                placeholderText);
+        if (foldRegion != null) {
+          foldRegion.setExpanded(false);
+        }
+      }
+    });
+  }
 
 }

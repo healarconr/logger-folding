@@ -14,31 +14,31 @@ import java.util.Set;
  */
 public final class LoggerClasses {
 
-	private static final Set<String> LOGGER_CLASSES;
+  private static final Set<String> LOGGER_CLASSES;
 
-	static {
-		Set<String> loggerClasses = new HashSet<>();
-		loggerClasses.add("java.util.logging.Logger");
-		loggerClasses.add("org.slf4j.Logger");
-		loggerClasses.add("org.apache.commons.logging.Log");
-		loggerClasses.add("org.apache.log4j.Logger");
-		LOGGER_CLASSES = Collections.unmodifiableSet(loggerClasses);
-	}
+  static {
+    Set<String> loggerClasses = new HashSet<>();
+    loggerClasses.add("java.util.logging.Logger");
+    loggerClasses.add("org.slf4j.Logger");
+    loggerClasses.add("org.apache.commons.logging.Log");
+    loggerClasses.add("org.apache.log4j.Logger");
+    LOGGER_CLASSES = Collections.unmodifiableSet(loggerClasses);
+  }
 
-	private LoggerClasses() {
+  private LoggerClasses() {
 
-		super();
-	}
+    super();
+  }
 
-	/**
-	 * Determines if a given class name corresponds to the name of one of the registered logger classes
-	 *
-	 * @param className the class name
-	 * @return true if the class name is one of the registered logger classes
-	 */
-	public static boolean contains(@Nullable String className) {
+  /**
+   * Determines if a given class name corresponds to the name of one of the registered logger classes
+   *
+   * @param className the class name
+   * @return true if the class name is one of the registered logger classes
+   */
+  public static boolean contains(@Nullable String className) {
 
-		return LOGGER_CLASSES.contains(className);
-	}
+    return LOGGER_CLASSES.contains(className);
+  }
 
 }
