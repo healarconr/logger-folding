@@ -22,6 +22,7 @@ public final class LoggerClasses {
     loggerClasses.add("org.slf4j.Logger");
     loggerClasses.add("org.apache.commons.logging.Log");
     loggerClasses.add("org.apache.log4j.Logger");
+    loggerClasses.add("org.apache.logging.log4j.Logger");
     LOGGER_CLASSES = Collections.unmodifiableSet(loggerClasses);
   }
 
