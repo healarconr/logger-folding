@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <id>com.github.healarconr.loggerfolding</id>
     <name>Logger folding</name>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
     <vendor email="hernaneduardoalarcon@gmail.com" url="https://github.com/healarconr">Hernan Alarcon</vendor>
 
     <description><![CDATA[
@@ -14,10 +14,15 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        <p>0.2.1</p>
+        <ul>
+            <li>Add support for log4j 2</p>
+            <li>Adjust project name</p>
+        </ul>
         <p>0.2.0</p>
         <ul>
             <li>Improve plugin description and add dependency on com.intellij.modules.java</li>
-            <li>Adjust code style, javadocs and project name</li>
+            <li>Adjust code style, javadocs and module name</li>
         </ul>
         <p>0.1.0</p>
         <ul>
