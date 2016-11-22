@@ -1,11 +1,12 @@
 <idea-plugin version="2">
     <id>com.github.healarconr.loggerfolding</id>
     <name>Logger folding</name>
-    <version>0.2.1</version>
+    <version>0.2.2</version>
     <vendor email="hernaneduardoalarcon@gmail.com" url="https://github.com/healarconr">Hernan Alarcon</vendor>
 
     <description><![CDATA[
-        <p>Folds and unfolds logger method calls in Java classes. Supports JUL, slf4j, Apache Commons Logging and log4j</p>
+        <p>Folds and unfolds logger method calls in Java classes. Supports JUL, slf4j, Apache Commons Logging, log4j,
+        Android Util Log and Timber</p>
         <p>Provides two new actions under the Code > Folding menu:</p>
         <ul>
             <li>Fold logger method calls (Alt Gr + L)</li>
@@ -14,6 +15,11 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        <p>0.2.2</p>
+        <ul>
+            <li>Add support for android.util.Log and timber.log.Timber</p>
+            <li>Fold and unfold method calls with a reference expression qualifier</p>
+        </ul>
         <p>0.2.1</p>
         <ul>
             <li>Add support for log4j 2</p>

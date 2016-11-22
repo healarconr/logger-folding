@@ -12,7 +12,7 @@ import java.util.Set;
  *
  * @author <a href="mailto:hernaneduardoalarcon@gmail.com">Hernán Alarcón</a>
  */
-public final class LoggerClasses {
+final class LoggerClasses {
 
   private static final Set<String> LOGGER_CLASSES;
 
@@ -23,6 +23,8 @@ public final class LoggerClasses {
     loggerClasses.add("org.apache.commons.logging.Log");
     loggerClasses.add("org.apache.log4j.Logger");
     loggerClasses.add("org.apache.logging.log4j.Logger");
+    loggerClasses.add("android.util.Log");
+    loggerClasses.add("timber.log.Timber");
     LOGGER_CLASSES = Collections.unmodifiableSet(loggerClasses);
   }
 
@@ -37,7 +39,7 @@ public final class LoggerClasses {
    * @param className the class name
    * @return true if the class name is one of the registered logger classes
    */
-  public static boolean contains(@Nullable String className) {
+  static boolean contains(@Nullable String className) {
 
     return LOGGER_CLASSES.contains(className);
   }
