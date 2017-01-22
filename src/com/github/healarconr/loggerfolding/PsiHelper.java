@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Helper class to determine if a PsiElement represents a logger method call and to obtain the text range of a PsiElement from its
@@ -22,52 +23,90 @@ final class PsiHelper {
   }
 
   /**
-   * Determines if a PsiElement represents a logger method call by evaluating the qualifier type
+   * Determines if a PsiElement represents a logger method call
    *
    * @param element the element
-   * @return true if the qualifier type is one of the logger classes defined in {@link LoggerClasses}
+   * @param state   the state of the logger folding settings
+   * @return true if the element represents a method call on a class defined in {@link LoggerFoldingSettings.State#getCanonicalNamesSet()}
    */
-  static boolean isALoggerMethodCall(@NotNull PsiElement element) {
+  static boolean isALoggerMethodCall(@NotNull PsiElement element, LoggerFoldingSettings.State state) {
 
     if (element instanceof PsiMethodCallExpression) {
       PsiMethodCallExpression methodCallExpression = (PsiMethodCallExpression) element;
       PsiReferenceExpression methodExpression = methodCallExpression.getMethodExpression();
       PsiExpression qualifierExpression = methodExpression.getQualifierExpression();
       if (qualifierExpression != null) {
-
         List<String> canonicalTexts = new LinkedList<>();
+        addCanonicalTextFromType(qualifierExpression, canonicalTexts);
+        addCanonicalTextFromReferenceExpression(qualifierExpression, canonicalTexts);
+        return isAnyCanonicalTextContainedInTheCanonicalNames(canonicalTexts, state.getCanonicalNamesSet());
+      }
+    }
+    return false;
+  }
 
-        PsiType type = qualifierExpression.getType();
-        if (type != null) {
-          canonicalTexts.add(type.getCanonicalText());
+  /**
+   * Adds the canonical text of the type of the qualifier expression to the canonical texts list
+   *
+   * @param qualifierExpression the qualifier expression
+   * @param canonicalTexts      the canonical texts
+   */
+  private static void addCanonicalTextFromType(PsiExpression qualifierExpression, List<String> canonicalTexts) {
+    PsiType type = qualifierExpression.getType();
+    if (type != null) {
+      canonicalTexts.add(type.getCanonicalText());
+    }
+  }
+
+  /**
+   * Adds the canonical text of a reference expression to the canonical texts list. If the reference expression is qualified
+   * the canonical text if obtained directly from it, but if it is not qualified the canonical text is obtained from the import statement
+   *
+   * @param qualifierExpression the qualifier expression
+   * @param canonicalTexts      the canonical texts
+   */
+  private static void addCanonicalTextFromReferenceExpression(PsiExpression qualifierExpression, List<String> canonicalTexts) {
+    if (qualifierExpression instanceof PsiReferenceExpression) {
+      PsiReferenceExpression referenceExpression = (PsiReferenceExpression) qualifierExpression;
+      if (referenceExpression.isQualified()) {
+        canonicalTexts.add(referenceExpression.getCanonicalText());
+      } else {
+        addCanonicalTextFromImport(referenceExpression, canonicalTexts);
+      }
+    }
+  }
+
+  /**
+   * Adds the canonical text of an import reference to the canonical texts list.
+   *
+   * @param referenceExpression the reference expression
+   * @param canonicalTexts      the canonical texts
+   */
+  private static void addCanonicalTextFromImport(PsiReferenceExpression referenceExpression, List<String> canonicalTexts) {
+    PsiJavaFile javaFile = (PsiJavaFile) referenceExpression.getContainingFile();
+    PsiImportList importList = javaFile.getImportList();
+    if (importList != null) {
+      PsiImportStatementBase importStatement = importList.findSingleImportStatement(referenceExpression.getReferenceName());
+      if (importStatement != null) {
+        PsiJavaCodeReferenceElement importReference = importStatement.getImportReference();
+        if (importReference != null) {
+          canonicalTexts.add(importReference.getCanonicalText());
         }
+      }
+    }
+  }
 
-        if (qualifierExpression instanceof PsiReferenceExpression) {
-          PsiReferenceExpression referenceExpression = (PsiReferenceExpression) qualifierExpression;
-          if (referenceExpression.isQualified()) {
-            canonicalTexts.add(referenceExpression.getCanonicalText());
-          } else {
-            PsiJavaFile javaFile = (PsiJavaFile) element.getContainingFile();
-            PsiImportList importList = javaFile.getImportList();
-            if (importList != null) {
-              PsiImportStatementBase importStatement = importList.findSingleImportStatement(referenceExpression.getReferenceName());
-              if (importStatement != null) {
-                PsiJavaCodeReferenceElement importReference = importStatement.getImportReference();
-                if (importReference != null) {
-                  canonicalTexts.add(importReference.getCanonicalText());
-                }
-              }
-            }
-          }
-        }
-
-        for (String canonicalText : canonicalTexts) {
-          if (LoggerClasses.contains(canonicalText)) {
-            return true;
-          }
-        }
-
-        return false;
+  /**
+   * Determines if any of the canonical texts is contained in the canonical names set
+   *
+   * @param canonicalTexts    the canonical texts
+   * @param canonicalNamesSet the canonical names set
+   * @return true if any of the canonical texts is contained in the canonical names set, false otherwise
+   */
+  private static boolean isAnyCanonicalTextContainedInTheCanonicalNames(List<String> canonicalTexts, Set<String> canonicalNamesSet) {
+    for (String canonicalText : canonicalTexts) {
+      if (canonicalNamesSet.contains(canonicalText)) {
+        return true;
       }
     }
     return false;
@@ -99,7 +138,6 @@ final class PsiHelper {
    * @return the first sibling of the provided element that represents a semicolon or null if none is found
    */
   @Nullable
-  @SuppressWarnings("ConstantConditions")
   private static PsiElement findSemicolonNextTo(@NotNull PsiElement element) {
 
     while ((element = element.getNextSibling()) != null) {

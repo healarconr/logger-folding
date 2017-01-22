@@ -1,12 +1,13 @@
 <idea-plugin version="2">
     <id>com.github.healarconr.loggerfolding</id>
     <name>Logger folding</name>
-    <version>0.2.2</version>
+    <version>0.3</version>
     <vendor email="hernaneduardoalarcon@gmail.com" url="https://github.com/healarconr">Hernan Alarcon</vendor>
 
     <description><![CDATA[
         <p>Folds and unfolds logger method calls in Java classes. Supports JUL, slf4j, Apache Commons Logging, log4j,
-        Android Util Log and Timber</p>
+        Android Util Log and Timber out of the box. The names of the classes of other logging frameworks can be
+        configured using the IDE settings (Tools > Logger folding)</p>
         <p>Provides two new actions under the Code > Folding menu:</p>
         <ul>
             <li>Fold logger method calls (Alt Gr + L)</li>
@@ -15,6 +16,10 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        <p>0.3</p>
+        <ul>
+            <li>Add configuration of the class names used to fold/unfold method calls using the IDE settings</li>
+        </ul>
         <p>0.2.2</p>
         <ul>
             <li>Add support for android.util.Log and timber.log.Timber</p>
@@ -41,6 +46,8 @@
     <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+        <projectConfigurable groupId="tools" id="LoggerFoldingConfigurable" instance="com.github.healarconr.loggerfolding.LoggerFoldingConfigurable" displayName="Logger folding"/>
+        <projectService serviceImplementation="com.github.healarconr.loggerfolding.LoggerFoldingSettings"/>
     </extensions>
 
     <actions>
