@@ -38,6 +38,8 @@ public class UnfoldLoggerMethodCallsAction extends AnAction {
       final Editor editor = actionEvent.getRequiredData(EDITOR);
       PsiJavaFile psiJavaFile = (PsiJavaFile) actionEvent.getRequiredData(PSI_FILE);
 
+      LoggerFoldingSettings.State state = LoggerFoldingSettings.getInstance(actionEvent.getProject()).getState();
+
       psiJavaFile.accept(new PsiRecursiveElementWalkingVisitor() {
 
         @Override
@@ -45,7 +47,7 @@ public class UnfoldLoggerMethodCallsAction extends AnAction {
 
           super.visitElement(element);
 
-          if (isALoggerMethodCall(element)) {
+          if (isALoggerMethodCall(element, state)) {
             PsiMethodCallExpression methodCallExpression = (PsiMethodCallExpression) element;
             TextRange textRange = getTextRange(methodCallExpression);
             FoldRegion foldRegion = getFoldRegion(editor, textRange);
@@ -80,13 +82,7 @@ public class UnfoldLoggerMethodCallsAction extends AnAction {
    */
   private void removeFoldRegion(@NotNull final Editor editor, @NotNull final FoldRegion foldRegion) {
 
-    editor.getFoldingModel().runBatchFoldingOperation(new Runnable() {
-      @Override
-      public void run() {
-
-        editor.getFoldingModel().removeFoldRegion(foldRegion);
-      }
-    });
+    editor.getFoldingModel().runBatchFoldingOperation(() -> editor.getFoldingModel().removeFoldRegion(foldRegion));
   }
 
 }

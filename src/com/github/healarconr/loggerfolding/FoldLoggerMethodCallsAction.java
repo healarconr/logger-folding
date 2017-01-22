@@ -37,13 +37,15 @@ public class FoldLoggerMethodCallsAction extends AnAction {
       final Editor editor = actionEvent.getRequiredData(EDITOR);
       PsiJavaFile psiJavaFile = (PsiJavaFile) actionEvent.getRequiredData(PSI_FILE);
 
+      LoggerFoldingSettings.State state = LoggerFoldingSettings.getInstance(actionEvent.getProject()).getState();
+
       psiJavaFile.accept(new PsiRecursiveElementWalkingVisitor() {
 
         @Override
         public void visitElement(PsiElement element) {
 
           super.visitElement(element);
-          if (isALoggerMethodCall(element)) {
+          if (isALoggerMethodCall(element, state)) {
             PsiMethodCallExpression methodCallExpression = (PsiMethodCallExpression) element;
             TextRange textRange = getTextRange(methodCallExpression);
             String placeholderText = getPlaceholderText(methodCallExpression);
@@ -75,17 +77,13 @@ public class FoldLoggerMethodCallsAction extends AnAction {
    */
   private void fold(@NotNull final Editor editor, @NotNull final TextRange textRange, @NotNull final String placeholderText) {
 
-    editor.getFoldingModel().runBatchFoldingOperation(new Runnable() {
+    editor.getFoldingModel().runBatchFoldingOperation(() -> {
 
-      @Override
-      public void run() {
-
-        FoldRegion foldRegion = editor.getFoldingModel()
-            .addFoldRegion(textRange.getStartOffset(), textRange.getEndOffset(),
-                placeholderText);
-        if (foldRegion != null) {
-          foldRegion.setExpanded(false);
-        }
+      FoldRegion foldRegion = editor.getFoldingModel()
+          .addFoldRegion(textRange.getStartOffset(), textRange.getEndOffset(),
+              placeholderText);
+      if (foldRegion != null) {
+        foldRegion.setExpanded(false);
       }
     });
   }
