@@ -76,6 +76,7 @@ public class LoggerFoldingSettings implements PersistentStateComponent<LoggerFol
       defaultCanonicalNames.add("org.apache.logging.log4j.Logger");
       defaultCanonicalNames.add("android.util.Log");
       defaultCanonicalNames.add("timber.log.Timber");
+      defaultCanonicalNames.add("mu.KLogger");
       return defaultCanonicalNames;
     }
   }

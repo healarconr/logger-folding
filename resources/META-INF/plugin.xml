@@ -1,13 +1,13 @@
-<idea-plugin version="2">
+<idea-plugin>
     <id>com.github.healarconr.loggerfolding</id>
     <name>Logger folding</name>
-    <version>0.3</version>
+    <version>0.4.0-beta.1</version>
     <vendor email="hernaneduardoalarcon@gmail.com" url="https://github.com/healarconr">Hernan Alarcon</vendor>
 
     <description><![CDATA[
-        <p>Folds and unfolds logger method calls in Java classes. Supports JUL, slf4j, Apache Commons Logging, log4j,
-        Android Util Log and Timber out of the box. The names of the classes of other logging frameworks can be
-        configured using the IDE settings (Tools > Logger folding)</p>
+        <p>Folds and unfolds logger method calls in Java and Kotlin files. Supports JUL, slf4j, Apache Commons Logging,
+        log4j, Android Util Log, Timber and kotlin-logging out of the box. The names of the classes of other logging
+        frameworks can be configured using the IDE settings (Tools > Logger folding)</p>
         <p>Provides two new actions under the Code > Folding menu:</p>
         <ul>
             <li>Fold logger method calls (Alt Gr + L)</li>
@@ -16,7 +16,11 @@
     ]]></description>
 
     <change-notes><![CDATA[
-        <p>0.3</p>
+        <p>0.4.0</>
+        <ul>
+            <li>Add support for Kotlin files and kotlin-logging</li>
+        </ul>
+        <p>0.3.0</p>
         <ul>
             <li>Add configuration of the class names used to fold/unfold method calls using the IDE settings</li>
         </ul>
@@ -44,9 +48,12 @@
     <idea-version since-build="143.0"/>
 
     <depends>com.intellij.modules.java</depends>
+    <depends optional="true">org.jetbrains.kotlin</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <projectConfigurable groupId="tools" id="LoggerFoldingConfigurable" instance="com.github.healarconr.loggerfolding.LoggerFoldingConfigurable" displayName="Logger folding"/>
+        <projectConfigurable groupId="tools" id="LoggerFoldingConfigurable"
+                             instance="com.github.healarconr.loggerfolding.LoggerFoldingConfigurable"
+                             displayName="Logger folding"/>
         <projectService serviceImplementation="com.github.healarconr.loggerfolding.LoggerFoldingSettings"/>
     </extensions>
 
