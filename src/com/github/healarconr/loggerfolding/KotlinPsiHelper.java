@@ -7,6 +7,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.kotlin.psi.*;
 
 import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Helper class to determine if a PsiElement represents a Kotlin logger method call and to obtain the text range and
@@ -43,28 +45,39 @@ final class KotlinPsiHelper {
     }
 
     KtExpression receiverExpression = dotQualifiedExpression.getReceiverExpression();
+    KtReferenceExpression referenceExpression = null;
 
-    PsiReference[] references = receiverExpression.getReferences();
+    if (receiverExpression instanceof KtReferenceExpression) {
+      referenceExpression = (KtReferenceExpression) receiverExpression;
+    } else if (receiverExpression instanceof KtDotQualifiedExpression) {
+      PsiElement[] children = receiverExpression.getChildren();
+      for (PsiElement child : children) {
+        if (child instanceof KtReferenceExpression) {
+          referenceExpression = (KtReferenceExpression) child;
+          break;
+        }
+      }
+    }
 
-    PsiElement resolvedReference = resolveReference(references);
-
-    if (!(resolvedReference instanceof KtProperty)) {
+    if (referenceExpression == null) {
       return false;
     }
 
-    KtProperty property = (KtProperty) resolvedReference;
+    PsiReference[] references = referenceExpression.getReferences();
 
-    KtTypeReference typeReference = property.getTypeReference();
+    PsiElement resolvedReference = resolveReference(references);
 
-    String canonicalName;
+    List<String> canonicalNames = new LinkedList<>();
 
-    if (typeReference != null) {
-      canonicalName = typeReference.getText();
-    } else {
-      canonicalName = getCanonicalNameFromPropertyCallExpression(property);
+    if (resolvedReference instanceof KtProperty) {
+      KtProperty property = (KtProperty) resolvedReference;
+      canonicalNames.addAll(getCanonicalNamesFromProperty(property));
+    } else if (resolvedReference instanceof KtParameter) {
+      KtParameter parameter = (KtParameter) resolvedReference;
+      canonicalNames.addAll(getCanonicalNamesFromParameter(parameter));
     }
 
-    return PsiHelper.isAnyCanonicalTextContainedInTheCanonicalNames(Collections.singletonList(canonicalName), state
+    return PsiHelper.isAnyCanonicalTextContainedInTheCanonicalNames(canonicalNames, state
         .getCanonicalNamesSet());
   }
 
@@ -83,6 +96,84 @@ final class KotlinPsiHelper {
       }
     }
     return null;
+  }
+
+  /**
+   * Returns a list of canonical names from a property
+   *
+   * @param property the property
+   * @return the list of canonical names
+   */
+  private static List<String> getCanonicalNamesFromProperty(KtProperty property) {
+
+    List<String> canonicalNames = new LinkedList<>();
+
+    KtTypeReference typeReference = property.getTypeReference();
+
+    if (typeReference != null) {
+      canonicalNames.add(typeReference.getText());
+    } else {
+      canonicalNames.add(getCanonicalNameFromPropertyCallExpression(property));
+      canonicalNames.add(getCanonicalNameFromPropertyDotQualifiedExpression(property));
+    }
+
+    return canonicalNames;
+  }
+
+  /**
+   * Returns a list of canonical names from a parameter
+   *
+   * @param parameter the parameter
+   * @return the list of canonical names
+   */
+  private static List<String> getCanonicalNamesFromParameter(KtParameter parameter) {
+
+    KtTypeReference typeReference = parameter.getTypeReference();
+
+    if (typeReference == null) {
+      return Collections.emptyList();
+    }
+
+    String text = typeReference.getText();
+    if (text.contains(".")) {
+      return Collections.singletonList(text);
+    }
+
+    KtTypeElement typeElement = typeReference.getTypeElement();
+
+    if (typeElement == null) {
+      return Collections.emptyList();
+    }
+
+    KtReferenceExpression referenceExpression = null;
+
+    PsiElement[] children = typeElement.getChildren();
+    for (PsiElement child : children) {
+      if (child instanceof KtReferenceExpression) {
+        referenceExpression = (KtReferenceExpression) child;
+      }
+    }
+
+    if (referenceExpression == null) {
+      return Collections.emptyList();
+    }
+
+    PsiReference[] references = referenceExpression.getReferences();
+
+    PsiElement resolvedReference = resolveReference(references);
+
+    if (!(resolvedReference instanceof KtClass)) {
+      return Collections.emptyList();
+    }
+    KtClass type = (KtClass) resolvedReference;
+    StringBuilder canonicalName = new StringBuilder();
+    String packageName = type.getContainingKtFile().getPackageFqName().asString();
+    if (!packageName.isEmpty()) {
+      canonicalName.append(packageName);
+      canonicalName.append(".");
+    }
+    canonicalName.append(typeReference.getText());
+    return Collections.singletonList(canonicalName.toString());
   }
 
   /**
@@ -115,6 +206,69 @@ final class KotlinPsiHelper {
     }
 
     PsiReference[] references = calleeExpression.getReferences();
+
+    PsiElement resolvedReference = resolveReference(references);
+
+    if (!(resolvedReference instanceof KtNamedFunction)) {
+      return null;
+    }
+
+    KtNamedFunction namedFunction = (KtNamedFunction) resolvedReference;
+
+    KtTypeReference typeReference = namedFunction.getTypeReference();
+
+    if (typeReference == null) {
+      return null;
+    }
+
+    return typeReference.getText();
+  }
+
+  /**
+   * Gets the class canonical name from the property dot qualified expression used to initialize it
+   *
+   * @param property the property
+   * @return the class canonical name or null if it could not be found
+   */
+  private static String getCanonicalNameFromPropertyDotQualifiedExpression(KtProperty property) {
+
+    KtDotQualifiedExpression dotQualifiedExpression = null;
+
+    PsiElement[] children = property.getChildren();
+
+    for (PsiElement child : children) {
+      if (child instanceof KtDotQualifiedExpression) {
+        dotQualifiedExpression = (KtDotQualifiedExpression) child;
+        break;
+      }
+    }
+
+    if (dotQualifiedExpression == null) {
+      return null;
+    }
+
+    KtExpression selectorExpression = dotQualifiedExpression.getSelectorExpression();
+
+    if (selectorExpression == null) {
+      return null;
+    }
+
+    KtNameReferenceExpression nameReferenceExpression = null;
+
+    children = selectorExpression.getChildren();
+
+    for (PsiElement child : children) {
+      if (child instanceof KtNameReferenceExpression) {
+        nameReferenceExpression = (KtNameReferenceExpression) child;
+        break;
+      }
+    }
+
+    if (nameReferenceExpression == null) {
+      return null;
+    }
+
+    PsiReference[] references = nameReferenceExpression.getReferences();
 
     PsiElement resolvedReference = resolveReference(references);
 
