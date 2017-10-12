@@ -80,8 +80,12 @@ public class FoldLoggerMethodCallsAction extends AnAction {
     editor.getFoldingModel().runBatchFoldingOperation(() -> {
 
       FoldRegion foldRegion = editor.getFoldingModel()
-          .addFoldRegion(textRange.getStartOffset(), textRange.getEndOffset(),
-              placeholderText);
+          .getFoldRegion(textRange.getStartOffset(), textRange.getEndOffset());
+      if (foldRegion == null) {
+        foldRegion = editor.getFoldingModel()
+            .addFoldRegion(textRange.getStartOffset(), textRange.getEndOffset(),
+                placeholderText);
+      }
       if (foldRegion != null) {
         foldRegion.setExpanded(false);
       }
