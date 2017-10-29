@@ -5,15 +5,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiJavaFile;
-import com.intellij.psi.PsiMethodCallExpression;
-import com.intellij.psi.PsiRecursiveElementWalkingVisitor;
+import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 
-import static com.github.healarconr.loggerfolding.ActionHelper.isAvailable;
-import static com.github.healarconr.loggerfolding.PsiHelper.getTextRange;
-import static com.github.healarconr.loggerfolding.PsiHelper.isALoggerMethodCall;
 import static com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR;
 import static com.intellij.openapi.actionSystem.CommonDataKeys.PSI_FILE;
 
@@ -27,45 +21,51 @@ public class FoldLoggerMethodCallsAction extends AnAction {
   @Override
   public void update(AnActionEvent actionEvent) {
 
-    actionEvent.getPresentation().setVisible(isAvailable(actionEvent));
+    actionEvent.getPresentation().setVisible(ActionHelper.isAvailable(actionEvent));
   }
 
   @Override
   public void actionPerformed(AnActionEvent actionEvent) {
 
-    if (isAvailable(actionEvent)) {
-      final Editor editor = actionEvent.getRequiredData(EDITOR);
-      PsiJavaFile psiJavaFile = (PsiJavaFile) actionEvent.getRequiredData(PSI_FILE);
+    if (!ActionHelper.isAvailable(actionEvent)) {
+      return;
+    }
 
-      LoggerFoldingSettings.State state = LoggerFoldingSettings.getInstance(actionEvent.getProject()).getState();
+    Editor editor = actionEvent.getRequiredData(EDITOR);
+    PsiFile psiFile = actionEvent.getRequiredData(PSI_FILE);
 
-      psiJavaFile.accept(new PsiRecursiveElementWalkingVisitor() {
+    LoggerFoldingSettings.State state = LoggerFoldingSettings.getInstance(actionEvent.getProject()).getState();
+
+    if (psiFile instanceof PsiJavaFile) {
+      psiFile.accept(new PsiRecursiveElementWalkingVisitor() {
 
         @Override
         public void visitElement(PsiElement element) {
 
           super.visitElement(element);
-          if (isALoggerMethodCall(element, state)) {
-            PsiMethodCallExpression methodCallExpression = (PsiMethodCallExpression) element;
-            TextRange textRange = getTextRange(methodCallExpression);
-            String placeholderText = getPlaceholderText(methodCallExpression);
+          if (JavaPsiHelper.isALoggerMethodCall(element, state)) {
+            TextRange textRange = JavaPsiHelper.getTextRange(element);
+            String placeholderText = JavaPsiHelper.getPlaceholderText(element);
+            fold(editor, textRange, placeholderText);
+          }
+        }
+      });
+    } else {
+      psiFile.accept(new PsiRecursiveElementWalkingVisitor() {
+
+        @Override
+        public void visitElement(PsiElement element) {
+
+          super.visitElement(element);
+          if (KotlinPsiHelper.isALoggerMethodCall(element, state)) {
+            TextRange textRange = KotlinPsiHelper.getTextRange(element);
+            String placeholderText = KotlinPsiHelper.getPlaceholderText(element);
             fold(editor, textRange, placeholderText);
           }
         }
       });
     }
-  }
 
-  /**
-   * Returns the placeholder text used in the fold region for a logger method call
-   *
-   * @param methodCallExpression the method call expression
-   * @return the method expression text followed by "(...);"
-   */
-  @NotNull
-  private String getPlaceholderText(@NotNull PsiMethodCallExpression methodCallExpression) {
-
-    return methodCallExpression.getMethodExpression().getText() + "(...);";
   }
 
   /**
@@ -80,8 +80,12 @@ public class FoldLoggerMethodCallsAction extends AnAction {
     editor.getFoldingModel().runBatchFoldingOperation(() -> {
 
       FoldRegion foldRegion = editor.getFoldingModel()
-          .addFoldRegion(textRange.getStartOffset(), textRange.getEndOffset(),
-              placeholderText);
+          .getFoldRegion(textRange.getStartOffset(), textRange.getEndOffset());
+      if (foldRegion == null) {
+        foldRegion = editor.getFoldingModel()
+            .addFoldRegion(textRange.getStartOffset(), textRange.getEndOffset(),
+                placeholderText);
+      }
       if (foldRegion != null) {
         foldRegion.setExpanded(false);
       }

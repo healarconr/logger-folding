@@ -14,7 +14,7 @@ import static com.intellij.openapi.actionSystem.CommonDataKeys.*;
  *
  * @author <a href="mailto:hernaneduardoalarcon@gmail.com">Hernán Alarcón</a>
  */
-public final class ActionHelper {
+final class ActionHelper {
 
   private ActionHelper() {
 
@@ -27,12 +27,13 @@ public final class ActionHelper {
    * @param actionEvent the action event
    * @return true if the project, editor and PSI file are not null and the PSI file represents a Java file
    */
-  public static boolean isAvailable(@NotNull AnActionEvent actionEvent) {
+  static boolean isAvailable(@NotNull AnActionEvent actionEvent) {
 
     Project project = actionEvent.getData(PROJECT);
     Editor editor = actionEvent.getData(EDITOR);
     PsiFile psiFile = actionEvent.getData(PSI_FILE);
-    return project != null && editor != null && psiFile != null && psiFile instanceof PsiJavaFile;
+    return project != null && editor != null && psiFile != null && (psiFile instanceof PsiJavaFile ||
+        psiFile.getClass().getCanonicalName().equals("org.jetbrains.kotlin.psi.KtFile"));
   }
 
 }

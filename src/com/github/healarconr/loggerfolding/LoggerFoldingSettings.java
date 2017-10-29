@@ -6,12 +6,7 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Persistent logger folding settings
@@ -76,6 +71,7 @@ public class LoggerFoldingSettings implements PersistentStateComponent<LoggerFol
       defaultCanonicalNames.add("org.apache.logging.log4j.Logger");
       defaultCanonicalNames.add("android.util.Log");
       defaultCanonicalNames.add("timber.log.Timber");
+      defaultCanonicalNames.add("mu.KLogger");
       return defaultCanonicalNames;
     }
   }
