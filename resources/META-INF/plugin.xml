@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.github.healarconr.loggerfolding</id>
     <name>Logger folding</name>
-    <version>0.4.0-beta.3</version>
+    <version>0.4.0</version>
     <vendor email="hernaneduardoalarcon@gmail.com" url="https://github.com/healarconr">Hernan Alarcon</vendor>
 
     <description><![CDATA[
