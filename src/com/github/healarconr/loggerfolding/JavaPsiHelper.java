@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import static com.github.healarconr.loggerfolding.PsiHelper.isAnyCanonicalTextContainedInTheCanonicalNames;
 

@@ -28,45 +28,48 @@ public class UnfoldLoggerMethodCallsAction extends AnAction {
   @Override
   public void actionPerformed(AnActionEvent actionEvent) {
 
-    if (ActionHelper.isAvailable(actionEvent)) {
-      final Editor editor = actionEvent.getRequiredData(EDITOR);
-      PsiFile psiFile = actionEvent.getRequiredData(PSI_FILE);
+    if (!ActionHelper.isAvailable(actionEvent)) {
+      return;
+    }
 
-      LoggerFoldingSettings.State state = LoggerFoldingSettings.getInstance(actionEvent.getProject()).getState();
+    Editor editor = actionEvent.getRequiredData(EDITOR);
+    PsiFile psiFile = actionEvent.getRequiredData(PSI_FILE);
 
-      if (psiFile instanceof PsiJavaFile) {
-        psiFile.accept(new PsiRecursiveElementWalkingVisitor() {
+    LoggerFoldingSettings.State state = LoggerFoldingSettings.getInstance(actionEvent.getProject()).getState();
 
-          @Override
-          public void visitElement(PsiElement element) {
+    if (psiFile instanceof PsiJavaFile) {
+      psiFile.accept(new PsiRecursiveElementWalkingVisitor() {
 
-            super.visitElement(element);
-            if (JavaPsiHelper.isALoggerMethodCall(element, state)) {
-              TextRange textRange = JavaPsiHelper.getTextRange(element);
-              FoldRegion foldRegion = getFoldRegion(editor, textRange);
-              if (foldRegion != null) {
-                removeFoldRegion(editor, foldRegion);
-              }
+        @Override
+        public void visitElement(PsiElement element) {
+
+          super.visitElement(element);
+          if (JavaPsiHelper.isALoggerMethodCall(element, state)) {
+            TextRange textRange = JavaPsiHelper.getTextRange(element);
+            FoldRegion foldRegion = getFoldRegion(editor, textRange);
+            if (foldRegion != null) {
+              removeFoldRegion(editor, foldRegion);
             }
           }
-        });
-      } else {
-        psiFile.accept(new PsiRecursiveElementWalkingVisitor() {
+        }
+      });
+    } else {
+      psiFile.accept(new PsiRecursiveElementWalkingVisitor() {
 
-          @Override
-          public void visitElement(PsiElement element) {
+        @Override
+        public void visitElement(PsiElement element) {
 
-            super.visitElement(element);
-            if (KotlinPsiHelper.isALoggerMethodCall(element, state)) {
-              TextRange textRange = KotlinPsiHelper.getTextRange(element);
-              FoldRegion foldRegion = getFoldRegion(editor, textRange);
-              if (foldRegion != null) {
-                removeFoldRegion(editor, foldRegion);
-              }
+          super.visitElement(element);
+          if (KotlinPsiHelper.isALoggerMethodCall(element, state)) {
+            TextRange textRange = KotlinPsiHelper.getTextRange(element);
+            FoldRegion foldRegion = getFoldRegion(editor, textRange);
+            if (foldRegion != null) {
+              removeFoldRegion(editor, foldRegion);
             }
           }
-        });
-      }
+        }
+      });
+
     }
 
   }
