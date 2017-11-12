@@ -21,6 +21,8 @@ import java.util.List;
 
 /**
  * Configurable used to let the user establish the names of the logger classes to fold/unfold using the IDE settings (Tools > Logger folding)
+ *
+ * @author <a href="mailto:hernaneduardoalarcon@gmail.com">Hernán Alarcón</a>
  */
 public class LoggerFoldingConfigurable implements Configurable {
 
@@ -95,25 +97,27 @@ public class LoggerFoldingConfigurable implements Configurable {
   @Override
   public boolean isModified() {
 
-    LoggerFoldingSettings.State state = new LoggerFoldingSettings.State();
+    LoggerFoldingProjectSettings.State state = new LoggerFoldingProjectSettings.State();
     state.setCanonicalNames(canonicalNamesTableModel.getCanonicalNames());
-    return !state.equals(LoggerFoldingSettings.getInstance(project).getState());
+    return !state.equals(LoggerFoldingProjectSettings.getInstance(project).getState());
   }
 
   @Override
   public void apply() throws ConfigurationException {
     TableUtil.stopEditing(canonicalNamesTable);
-    LoggerFoldingSettings.getInstance(project).getState().setCanonicalNames(canonicalNamesTableModel.getCanonicalNames());
+    LoggerFoldingProjectSettings.getInstance(project).getState().setCanonicalNames(canonicalNamesTableModel.getCanonicalNames());
   }
 
   @Override
   public void reset() {
-    canonicalNamesTableModel.setCanonicalNames(LoggerFoldingSettings.getInstance(project).getState().getCanonicalNames());
+    canonicalNamesTableModel.setCanonicalNames(LoggerFoldingProjectSettings.getInstance(project).getState().getCanonicalNames());
     canonicalNamesTableModel.fireTableDataChanged();
   }
 
   /**
    * Table model used to store the canonical names of the logger classes
+   *
+   * @author <a href="mailto:hernaneduardoalarcon@gmail.com">Hernán Alarcón</a>
    */
   private static class CanonicalNamesTableModel extends AbstractTableModel {
 

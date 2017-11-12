@@ -9,13 +9,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 /**
- * Persistent logger folding settings
+ * Persistent logger folding project settings
+ *
+ * @author <a href="mailto:hernaneduardoalarcon@gmail.com">Hernán Alarcón</a>
  */
 @State(name = "LoggerFolding")
-public class LoggerFoldingSettings implements PersistentStateComponent<LoggerFoldingSettings.State> {
+public class LoggerFoldingProjectSettings implements PersistentStateComponent<LoggerFoldingProjectSettings.State> {
 
   /**
    * State class with the canonical names to persist
+   *
+   * @author <a href="mailto:hernaneduardoalarcon@gmail.com">Hernán Alarcón</a>
    */
   public static class State {
 
@@ -95,8 +99,8 @@ public class LoggerFoldingSettings implements PersistentStateComponent<LoggerFol
    * @param project the project
    * @return an instance of the settings
    */
-  static LoggerFoldingSettings getInstance(Project project) {
-    return ServiceManager.getService(project, LoggerFoldingSettings.class);
+  static LoggerFoldingProjectSettings getInstance(Project project) {
+    return ServiceManager.getService(project, LoggerFoldingProjectSettings.class);
   }
 
 }
