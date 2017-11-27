@@ -28,9 +28,9 @@ final class KotlinPsiHelper {
    *
    * @param element the element
    * @param state   the state of the logger folding settings
-   * @return true if the element represents a method call on a class defined in {@link LoggerFoldingSettings.State#getCanonicalNamesSet()}
+   * @return true if the element represents a method call on a class defined in {@link LoggerFoldingProjectSettings.State#getCanonicalNamesSet()}
    */
-  static boolean isALoggerMethodCall(@NotNull PsiElement element, LoggerFoldingSettings.State state) {
+  static boolean isALoggerMethodCall(@NotNull PsiElement element, LoggerFoldingProjectSettings.State state) {
 
     if (!(element instanceof KtDotQualifiedExpression)) {
       return false;

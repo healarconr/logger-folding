@@ -35,7 +35,7 @@ public class UnfoldLoggerMethodCallsAction extends AnAction {
     Editor editor = actionEvent.getRequiredData(EDITOR);
     PsiFile psiFile = actionEvent.getRequiredData(PSI_FILE);
 
-    LoggerFoldingSettings.State state = LoggerFoldingSettings.getInstance(actionEvent.getProject()).getState();
+    LoggerFoldingProjectSettings.State state = LoggerFoldingProjectSettings.getInstance(actionEvent.getProject()).getState();
 
     if (psiFile instanceof PsiJavaFile) {
       psiFile.accept(new PsiRecursiveElementWalkingVisitor() {

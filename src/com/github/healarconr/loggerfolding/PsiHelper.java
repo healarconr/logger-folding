@@ -5,6 +5,8 @@ import java.util.Set;
 
 /**
  * Helper class to determine if a canonical text is contained in a canonical names set
+ *
+ * @author <a href="mailto:hernaneduardoalarcon@gmail.com">Hernán Alarcón</a>
  */
 final class PsiHelper {
 
