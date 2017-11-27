@@ -1,20 +1,20 @@
 <idea-plugin>
     <id>com.github.healarconr.loggerfolding</id>
     <name>Logger folding</name>
-    <version>0.5.0-beta.1</version>
+    <version>0.5.0</version>
     <vendor email="hernaneduardoalarcon@gmail.com" url="https://github.com/healarconr">Hernan Alarcon</vendor>
 
     <description><![CDATA[
         <p>Folds and unfolds logger method calls in Java and Kotlin files. Supports JUL, slf4j, Apache Commons Logging,
         log4j, Android Util Log, Timber and kotlin-logging out of the box. The names of the classes of other logging
-        frameworks can be configured using the IDE settings (Tools > Logger folding)</p>
+        frameworks can be configured using the IDE settings (Tools > Logger folding).</p>
         <p>Provides two new actions under the Code > Folding menu:</p>
         <ul>
             <li>Fold logger method calls (Alt Gr + L)</li>
             <li>Unfold logger method calls (Shift + Alt Gr + L)</li>
         </ul>
         <p>Collapse by default of logger method calls can be enabled using File > Settings > Editor > General >
-        Code Folding and checking the Logger method calls checkbox</p>
+        Code Folding and checking the Logger method calls checkbox.</p>
     ]]></description>
 
     <change-notes><![CDATA[
