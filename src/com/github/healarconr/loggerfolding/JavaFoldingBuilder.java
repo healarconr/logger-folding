@@ -37,7 +37,7 @@ public class JavaFoldingBuilder extends FoldingBuilderEx {
 
     buildFoldRegions(psiElement, foldingDescriptors, state);
 
-    return foldingDescriptors.toArray(new FoldingDescriptor[foldingDescriptors.size()]);
+    return foldingDescriptors.toArray(new FoldingDescriptor[0]);
   }
 
   /**
