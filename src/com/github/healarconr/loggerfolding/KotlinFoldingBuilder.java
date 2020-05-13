@@ -7,7 +7,6 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiJavaFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +38,7 @@ public class KotlinFoldingBuilder extends FoldingBuilderEx {
 
     buildFoldRegions(psiElement, foldingDescriptors, state);
 
-    return foldingDescriptors.toArray(new FoldingDescriptor[foldingDescriptors.size()]);
+    return foldingDescriptors.toArray(new FoldingDescriptor[0]);
   }
 
   /**

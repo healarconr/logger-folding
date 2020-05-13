@@ -56,7 +56,7 @@ public class LoggerFoldingApplicationSettings implements PersistentStateComponen
   }
 
   @Override
-  public void loadState(State state) {
+  public void loadState(@NotNull State state) {
     this.state = state;
   }
 

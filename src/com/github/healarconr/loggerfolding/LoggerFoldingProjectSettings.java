@@ -89,7 +89,7 @@ public class LoggerFoldingProjectSettings implements PersistentStateComponent<Lo
   }
 
   @Override
-  public void loadState(State state) {
+  public void loadState(@NotNull State state) {
     this.state = state;
   }
 
