@@ -5,7 +5,10 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiRecursiveElementWalkingVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +29,7 @@ public class UnfoldLoggerMethodCallsAction extends AnAction {
   }
 
   @Override
-  public void actionPerformed(AnActionEvent actionEvent) {
+  public void actionPerformed(@NotNull AnActionEvent actionEvent) {
 
     if (!ActionHelper.isAvailable(actionEvent)) {
       return;
@@ -38,40 +41,35 @@ public class UnfoldLoggerMethodCallsAction extends AnAction {
     LoggerFoldingProjectSettings.State state = LoggerFoldingProjectSettings.getInstance(actionEvent.getProject()).getState();
 
     if (psiFile instanceof PsiJavaFile) {
-      psiFile.accept(new PsiRecursiveElementWalkingVisitor() {
-
-        @Override
-        public void visitElement(PsiElement element) {
-
-          super.visitElement(element);
-          if (JavaPsiHelper.isALoggerMethodCall(element, state)) {
-            TextRange textRange = JavaPsiHelper.getTextRange(element);
-            FoldRegion foldRegion = getFoldRegion(editor, textRange);
-            if (foldRegion != null) {
-              removeFoldRegion(editor, foldRegion);
-            }
-          }
-        }
-      });
+      unfoldJavaFile(editor, psiFile, state);
     } else {
-      psiFile.accept(new PsiRecursiveElementWalkingVisitor() {
+      unfoldKotlinFile(editor, psiFile, state);
+    }
+  }
 
-        @Override
-        public void visitElement(PsiElement element) {
+  /**
+   * Unfolds logger method calls in a Java file
+   *
+   * @param editor  the editor
+   * @param psiFile the PSI file
+   * @param state   the state
+   */
+  private void unfoldJavaFile(Editor editor, PsiFile psiFile, LoggerFoldingProjectSettings.State state) {
+    psiFile.accept(new PsiRecursiveElementWalkingVisitor() {
 
-          super.visitElement(element);
-          if (KotlinPsiHelper.isALoggerMethodCall(element, state)) {
-            TextRange textRange = KotlinPsiHelper.getTextRange(element);
-            FoldRegion foldRegion = getFoldRegion(editor, textRange);
-            if (foldRegion != null) {
-              removeFoldRegion(editor, foldRegion);
-            }
+      @Override
+      public void visitElement(@NotNull PsiElement element) {
+
+        super.visitElement(element);
+        if (JavaPsiHelper.isALoggerMethodCall(element, state)) {
+          TextRange textRange = JavaPsiHelper.getTextRange(element);
+          FoldRegion foldRegion = getFoldRegion(editor, textRange);
+          if (foldRegion != null) {
+            removeFoldRegion(editor, foldRegion);
           }
         }
-      });
-
-    }
-
+      }
+    });
   }
 
   /**
@@ -98,4 +96,28 @@ public class UnfoldLoggerMethodCallsAction extends AnAction {
     editor.getFoldingModel().runBatchFoldingOperation(() -> editor.getFoldingModel().removeFoldRegion(foldRegion));
   }
 
+  /**
+   * Unfolds logger method calls in a Kotlin file
+   *
+   * @param editor  the editor
+   * @param psiFile the PSI file
+   * @param state   the state
+   */
+  private void unfoldKotlinFile(Editor editor, PsiFile psiFile, LoggerFoldingProjectSettings.State state) {
+    psiFile.accept(new PsiRecursiveElementWalkingVisitor() {
+
+      @Override
+      public void visitElement(@NotNull PsiElement element) {
+
+        super.visitElement(element);
+        if (KotlinPsiHelper.isALoggerMethodCall(element, state)) {
+          TextRange textRange = KotlinPsiHelper.getTextRange(element);
+          FoldRegion foldRegion = getFoldRegion(editor, textRange);
+          if (foldRegion != null) {
+            removeFoldRegion(editor, foldRegion);
+          }
+        }
+      }
+    });
+  }
 }

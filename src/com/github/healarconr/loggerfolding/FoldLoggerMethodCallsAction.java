@@ -5,7 +5,10 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.psi.*;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiRecursiveElementWalkingVisitor;
 import org.jetbrains.annotations.NotNull;
 
 import static com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR;
@@ -25,7 +28,7 @@ public class FoldLoggerMethodCallsAction extends AnAction {
   }
 
   @Override
-  public void actionPerformed(AnActionEvent actionEvent) {
+  public void actionPerformed(@NotNull AnActionEvent actionEvent) {
 
     if (!ActionHelper.isAvailable(actionEvent)) {
       return;
@@ -40,7 +43,7 @@ public class FoldLoggerMethodCallsAction extends AnAction {
       psiFile.accept(new PsiRecursiveElementWalkingVisitor() {
 
         @Override
-        public void visitElement(PsiElement element) {
+        public void visitElement(@NotNull PsiElement element) {
 
           super.visitElement(element);
           if (JavaPsiHelper.isALoggerMethodCall(element, state)) {
@@ -54,7 +57,7 @@ public class FoldLoggerMethodCallsAction extends AnAction {
       psiFile.accept(new PsiRecursiveElementWalkingVisitor() {
 
         @Override
-        public void visitElement(PsiElement element) {
+        public void visitElement(@NotNull PsiElement element) {
 
           super.visitElement(element);
           if (KotlinPsiHelper.isALoggerMethodCall(element, state)) {

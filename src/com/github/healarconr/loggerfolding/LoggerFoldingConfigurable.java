@@ -1,7 +1,6 @@
 package com.github.healarconr.loggerfolding;
 
 import com.intellij.openapi.options.Configurable;
-import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.IdeBorderFactory;
 import com.intellij.ui.TableUtil;
@@ -10,11 +9,9 @@ import com.intellij.ui.table.JBTable;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.JComponent;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import java.awt.BorderLayout;
-import java.awt.Component;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -55,7 +52,7 @@ public class LoggerFoldingConfigurable implements Configurable {
     JPanel canonicalNamesPanel = new JPanel(new BorderLayout());
     container.add(canonicalNamesPanel, BorderLayout.CENTER);
 
-    canonicalNamesPanel.setBorder(IdeBorderFactory.createTitledBorder("Classes or interfaces to fold/unfold", false));
+    canonicalNamesPanel.setBorder(IdeBorderFactory.createTitledBorder("Classes or Interfaces to Fold/Unfold", false));
 
     canonicalNamesTableModel = new CanonicalNamesTableModel(Collections.emptyList());
     canonicalNamesTable = new JBTable(canonicalNamesTableModel);
@@ -103,7 +100,7 @@ public class LoggerFoldingConfigurable implements Configurable {
   }
 
   @Override
-  public void apply() throws ConfigurationException {
+  public void apply() {
     TableUtil.stopEditing(canonicalNamesTable);
     LoggerFoldingProjectSettings.getInstance(project).getState().setCanonicalNames(canonicalNamesTableModel.getCanonicalNames());
   }

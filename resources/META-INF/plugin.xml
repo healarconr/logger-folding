@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.github.healarconr.loggerfolding</id>
     <name>Logger folding</name>
-    <version>0.5.0</version>
+    <version>0.5.1</version>
     <vendor email="hernaneduardoalarcon@gmail.com" url="https://github.com/healarconr">Hernan Alarcon</vendor>
 
     <description><![CDATA[
@@ -18,6 +18,10 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        <p>0.5.1</p>
+        <ul>
+            <li>Fix configuration defect</li>
+        </ul>
         <p>0.5.0</p>
         <ul>
             <li>Add support for collapse by default</li>
@@ -51,32 +55,31 @@
         </ul>
     ]]></change-notes>
 
-    <idea-version since-build="143.0"/>
+    <idea-version since-build="163.3094.26"/>
 
     <depends>com.intellij.modules.java</depends>
-    <depends optional="true">org.jetbrains.kotlin</depends>
+    <depends optional="true" config-file="kotlin.xml">org.jetbrains.kotlin</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <projectConfigurable groupId="tools" id="LoggerFoldingConfigurable"
                              instance="com.github.healarconr.loggerfolding.LoggerFoldingConfigurable"
-                             displayName="Logger folding"/>
+                             displayName="Logger Folding"/>
         <projectService serviceImplementation="com.github.healarconr.loggerfolding.LoggerFoldingProjectSettings"/>
         <applicationService serviceImplementation="com.github.healarconr.loggerfolding.LoggerFoldingApplicationSettings"/>
         <lang.foldingBuilder language="JAVA" implementationClass="com.github.healarconr.loggerfolding.JavaFoldingBuilder"/>
-        <lang.foldingBuilder language="kotlin" implementationClass="com.github.healarconr.loggerfolding.KotlinFoldingBuilder"/>
         <codeFoldingOptionsProvider instance="com.github.healarconr.loggerfolding.FoldingOptionsProvider"/>
     </extensions>
 
     <actions>
         <action id="com.github.healarconr.loggerfolding.FoldLoggerMethodCallsAction"
                 class="com.github.healarconr.loggerfolding.FoldLoggerMethodCallsAction"
-                text="Fold logger method calls" description="Folds logger method calls">
+                text="Fold Logger Method Calls" description="Folds logger method calls">
             <add-to-group group-id="FoldingGroup"/>
             <keyboard-shortcut first-keystroke="altGraph L" keymap="$default"/>
         </action>
         <action id="com.github.healarconr.loggerfolding.UnfoldLoggerMethodCallsAction"
                 class="com.github.healarconr.loggerfolding.UnfoldLoggerMethodCallsAction"
-                text="Unfold logger method calls" description="Unfolds logger method calls">
+                text="Unfold Logger Method Calls" description="Unfolds logger method calls">
             <add-to-group group-id="FoldingGroup"/>
             <keyboard-shortcut first-keystroke="altGraph shift L" keymap="$default"/>
         </action>
