@@ -1,7 +1,7 @@
 package com.github.healarconr.loggerfolding;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import org.jetbrains.annotations.NotNull;
@@ -66,7 +66,7 @@ public class LoggerFoldingApplicationSettings implements PersistentStateComponen
    * @return an instance of the settings
    */
   static LoggerFoldingApplicationSettings getInstance() {
-    return ServiceManager.getService(LoggerFoldingApplicationSettings.class);
+    return ApplicationManager.getApplication().getService(LoggerFoldingApplicationSettings.class);
   }
 
 }
