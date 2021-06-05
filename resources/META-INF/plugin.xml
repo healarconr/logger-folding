@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>com.github.healarconr.loggerfolding</id>
-    <name>Logger folding</name>
-    <version>0.5.1</version>
+    <name>Logger Folding</name>
+    <version>0.5.2-beta.1</version>
     <vendor email="hernaneduardoalarcon@gmail.com" url="https://github.com/healarconr">Hernan Alarcon</vendor>
 
     <description><![CDATA[
@@ -18,6 +18,10 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        <p>0.5.2</p>
+        <ul>
+            <li>Fix deprecated method usage</li>
+        </ul>
         <p>0.5.1</p>
         <ul>
             <li>Fix configuration defect</li>
@@ -55,7 +59,7 @@
         </ul>
     ]]></change-notes>
 
-    <idea-version since-build="163.3094.26"/>
+    <idea-version since-build="212.3116.43"/>
 
     <depends>com.intellij.modules.java</depends>
     <depends optional="true" config-file="kotlin.xml">org.jetbrains.kotlin</depends>
