@@ -1,7 +1,6 @@
 package com.github.healarconr.loggerfolding;
 
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
@@ -100,7 +99,7 @@ public class LoggerFoldingProjectSettings implements PersistentStateComponent<Lo
    * @return an instance of the settings
    */
   static LoggerFoldingProjectSettings getInstance(Project project) {
-    return ServiceManager.getService(project, LoggerFoldingProjectSettings.class);
+    return project.getService(LoggerFoldingProjectSettings.class);
   }
 
 }
