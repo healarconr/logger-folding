@@ -14,6 +14,7 @@ import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
@@ -95,19 +96,19 @@ public class LoggerFoldingConfigurable implements Configurable {
     public boolean isModified() {
 
         LoggerFoldingProjectSettings.State state = new LoggerFoldingProjectSettings.State();
-        state.setCanonicalNames(canonicalNamesTableModel.getCanonicalNames());
+        state.setCanonicalNames(new LinkedHashSet<>(canonicalNamesTableModel.getCanonicalNames()));
         return !state.equals(LoggerFoldingProjectSettings.getInstance(project).getState());
     }
 
     @Override
     public void apply() {
         TableUtil.stopEditing(canonicalNamesTable);
-        LoggerFoldingProjectSettings.getInstance(project).getState().setCanonicalNames(canonicalNamesTableModel.getCanonicalNames());
+        LoggerFoldingProjectSettings.getInstance(project).getState().setCanonicalNames(new LinkedHashSet<>(canonicalNamesTableModel.getCanonicalNames()));
     }
 
     @Override
     public void reset() {
-        canonicalNamesTableModel.setCanonicalNames(LoggerFoldingProjectSettings.getInstance(project).getState().getCanonicalNames());
+        canonicalNamesTableModel.setCanonicalNames(new ArrayList<>(LoggerFoldingProjectSettings.getInstance(project).getState().getCanonicalNames()));
         canonicalNamesTableModel.fireTableDataChanged();
     }
 

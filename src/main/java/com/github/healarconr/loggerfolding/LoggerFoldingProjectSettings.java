@@ -1,19 +1,22 @@
 package com.github.healarconr.loggerfolding;
 
 import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.Service;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Objects;
 
 /**
  * Persistent logger folding project settings
  *
  * @author <a href="mailto:hernaneduardoalarcon@gmail.com">Hernán Alarcón</a>
  */
+@Service(Service.Level.PROJECT)
 @State(name = "LoggerFolding")
-public class LoggerFoldingProjectSettings implements PersistentStateComponent<LoggerFoldingProjectSettings.State> {
+public final class LoggerFoldingProjectSettings implements PersistentStateComponent<LoggerFoldingProjectSettings.State> {
 
     private State state = new State();
 
@@ -45,16 +48,16 @@ public class LoggerFoldingProjectSettings implements PersistentStateComponent<Lo
      */
     public static class State {
 
-        private List<String> canonicalNames = getDefaultCanonicalNames();
-        private Set<String> canonicalNamesSet = new HashSet<>(canonicalNames);
+        private LinkedHashSet<String> canonicalNames = getDefaultCanonicalNames();
+
 
         /**
-         * Returns a list of the default canonical names of the logger classes
+         * Returns a linked hash set of the default canonical names of the logger classes
          *
-         * @return a list of the default canonical names of the logger classes
+         * @return a linked hash set of the default canonical names of the logger classes
          */
-        private static List<String> getDefaultCanonicalNames() {
-            List<String> defaultCanonicalNames = new LinkedList<>();
+        private static LinkedHashSet<String> getDefaultCanonicalNames() {
+            LinkedHashSet<String> defaultCanonicalNames = new LinkedHashSet<>();
             defaultCanonicalNames.add("java.util.logging.Logger");
             defaultCanonicalNames.add("org.slf4j.Logger");
             defaultCanonicalNames.add("org.apache.commons.logging.Log");
@@ -66,22 +69,12 @@ public class LoggerFoldingProjectSettings implements PersistentStateComponent<Lo
             return defaultCanonicalNames;
         }
 
-        public List<String> getCanonicalNames() {
+        public LinkedHashSet<String> getCanonicalNames() {
             return canonicalNames;
         }
 
-        public void setCanonicalNames(List<String> canonicalNames) {
-            this.canonicalNames = new ArrayList<>(canonicalNames);
-            this.canonicalNamesSet = new HashSet<>(this.canonicalNames);
-        }
-
-        /**
-         * Returns a set of the canonical names to perform a faster search
-         *
-         * @return a set of the canonical names
-         */
-        Set<String> getCanonicalNamesSet() {
-            return canonicalNamesSet;
+        public void setCanonicalNames(LinkedHashSet<String> canonicalNames) {
+            this.canonicalNames = new LinkedHashSet<>(canonicalNames);
         }
 
         @Override

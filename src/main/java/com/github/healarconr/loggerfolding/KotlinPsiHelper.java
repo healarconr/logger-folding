@@ -28,7 +28,7 @@ final class KotlinPsiHelper {
      *
      * @param element the element
      * @param state   the state of the logger folding settings
-     * @return true if the element represents a method call on a class defined in {@link LoggerFoldingProjectSettings.State#getCanonicalNamesSet()}
+     * @return true if the element represents a method call on a class defined in {@link LoggerFoldingProjectSettings.State#getCanonicalNames()}
      */
     static boolean isALoggerMethodCall(@NotNull PsiElement element, LoggerFoldingProjectSettings.State state) {
 
@@ -74,7 +74,7 @@ final class KotlinPsiHelper {
         }
 
         return PsiHelper.isAnyCanonicalTextContainedInTheCanonicalNames(canonicalNames, state
-                .getCanonicalNamesSet());
+                .getCanonicalNames());
     }
 
     /**

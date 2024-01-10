@@ -28,7 +28,7 @@ final class JavaPsiHelper {
      *
      * @param element the element
      * @param state   the state of the logger folding settings
-     * @return true if the element represents a method call on a class defined in {@link LoggerFoldingProjectSettings.State#getCanonicalNamesSet()}
+     * @return true if the element represents a method call on a class defined in {@link LoggerFoldingProjectSettings.State#getCanonicalNames()}
      */
     static boolean isALoggerMethodCall(@NotNull PsiElement element, LoggerFoldingProjectSettings.State state) {
 
@@ -45,7 +45,7 @@ final class JavaPsiHelper {
                 List<String> canonicalTexts = new LinkedList<>();
                 addCanonicalTextFromType(qualifierExpression, canonicalTexts);
                 addCanonicalTextFromReferenceExpression(qualifierExpression, canonicalTexts);
-                return isAnyCanonicalTextContainedInTheCanonicalNames(canonicalTexts, state.getCanonicalNamesSet());
+                return isAnyCanonicalTextContainedInTheCanonicalNames(canonicalTexts, state.getCanonicalNames());
             }
         }
         return false;

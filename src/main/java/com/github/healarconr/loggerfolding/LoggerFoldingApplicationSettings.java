@@ -2,6 +2,7 @@ package com.github.healarconr.loggerfolding;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.Service;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import org.jetbrains.annotations.NotNull;
@@ -11,8 +12,9 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author <a href="mailto:hernaneduardoalarcon@gmail.com">Hernán Alarcón</a>
  */
+@Service(Service.Level.APP)
 @State(name = "LoggerFolding", storages = @Storage("editor.codeinsight.xml"))
-public class LoggerFoldingApplicationSettings implements PersistentStateComponent<LoggerFoldingApplicationSettings.State> {
+public final class LoggerFoldingApplicationSettings implements PersistentStateComponent<LoggerFoldingApplicationSettings.State> {
 
     private State state = new State();
 
