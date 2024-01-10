@@ -18,6 +18,7 @@ intellij {
     type.set("IC") // Target IDE Platform
 
     plugins.set(listOf("com.intellij.java", "org.jetbrains.kotlin"))
+    updateSinceUntilBuild = false
 }
 
 tasks {
@@ -28,10 +29,6 @@ tasks {
     }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions.jvmTarget = "17"
-    }
-
-    patchPluginXml {
-        sinceBuild.set("222.4554.10")
     }
 
     signPlugin {

@@ -2,7 +2,7 @@
     <id>com.github.healarconr.loggerfolding</id>
     <name>Logger Folding</name>
     <vendor email="hernaneduardoalarcon@gmail.com" url="https://github.com/healarconr">Hernan Alarcon</vendor>
-
+    <idea-version since-build="222.4554.10" />
     <description><![CDATA[
         <p>Folds and unfolds logger method calls in Java and Kotlin files. Supports JUL, slf4j, Apache Commons Logging,
         log4j, Android Util Log, Timber and kotlin-logging out of the box. The names of the classes of other logging
@@ -70,7 +70,6 @@
         <projectConfigurable groupId="tools" id="LoggerFoldingConfigurable"
                              instance="com.github.healarconr.loggerfolding.LoggerFoldingConfigurable"
                              displayName="Logger Folding"/>
-        <projectService serviceImplementation="com.github.healarconr.loggerfolding.LoggerFoldingProjectSettings"/>
         <applicationService
                 serviceImplementation="com.github.healarconr.loggerfolding.LoggerFoldingApplicationSettings"/>
         <lang.foldingBuilder language="JAVA"
