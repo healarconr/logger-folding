@@ -1,7 +1,6 @@
 <idea-plugin>
     <id>com.github.healarconr.loggerfolding</id>
     <name>Logger Folding</name>
-    <version>0.5.2</version>
     <vendor email="hernaneduardoalarcon@gmail.com" url="https://github.com/healarconr">Hernan Alarcon</vendor>
 
     <description><![CDATA[
@@ -59,8 +58,6 @@
         </ul>
     ]]></change-notes>
 
-    <idea-version since-build="212.3116.43"/>
-
     <depends>com.intellij.modules.java</depends>
     <depends optional="true" config-file="kotlin.xml">org.jetbrains.kotlin</depends>
 
@@ -69,8 +66,10 @@
                              instance="com.github.healarconr.loggerfolding.LoggerFoldingConfigurable"
                              displayName="Logger Folding"/>
         <projectService serviceImplementation="com.github.healarconr.loggerfolding.LoggerFoldingProjectSettings"/>
-        <applicationService serviceImplementation="com.github.healarconr.loggerfolding.LoggerFoldingApplicationSettings"/>
-        <lang.foldingBuilder language="JAVA" implementationClass="com.github.healarconr.loggerfolding.JavaFoldingBuilder"/>
+        <applicationService
+                serviceImplementation="com.github.healarconr.loggerfolding.LoggerFoldingApplicationSettings"/>
+        <lang.foldingBuilder language="JAVA"
+                             implementationClass="com.github.healarconr.loggerfolding.JavaFoldingBuilder"/>
         <codeFoldingOptionsProvider instance="com.github.healarconr.loggerfolding.FoldingOptionsProvider"/>
     </extensions>
 
