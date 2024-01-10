@@ -17,6 +17,11 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        <p>0.6.0-beta.1</p>
+        <ul>
+            <li>Migrate plugin from DevKit to Gradle.</li>
+            <li>Fix loading of canonical names from project settings. Issue #13.</li>
+        </ul>
         <p>0.5.2</p>
         <ul>
             <li>Fix deprecated method usage</li>
