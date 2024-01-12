@@ -10,12 +10,12 @@ import com.intellij.openapi.options.BeanConfigurable;
  */
 public class FoldingOptionsProvider extends BeanConfigurable<LoggerFoldingApplicationSettings.State> implements CodeFoldingOptionsProvider {
 
-  protected FoldingOptionsProvider() {
+    protected FoldingOptionsProvider() {
 
-    super(LoggerFoldingApplicationSettings.getInstance().getState());
-    checkBox("Logger method calls", LoggerFoldingApplicationSettings.getInstance()
-        .getState()::getCollapseByDefault, LoggerFoldingApplicationSettings
-        .getInstance().getState()::setCollapseByDefault);
-  }
+        super(LoggerFoldingApplicationSettings.getInstance().getState());
+        checkBox("Logger method calls", LoggerFoldingApplicationSettings.getInstance()
+                .getState()::getCollapseByDefault, LoggerFoldingApplicationSettings
+                .getInstance().getState()::setCollapseByDefault);
+    }
 
 }

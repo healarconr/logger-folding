@@ -1,9 +1,8 @@
 <idea-plugin>
     <id>com.github.healarconr.loggerfolding</id>
     <name>Logger Folding</name>
-    <version>0.5.2</version>
     <vendor email="hernaneduardoalarcon@gmail.com" url="https://github.com/healarconr">Hernan Alarcon</vendor>
-
+    <idea-version since-build="222.4554.10" />
     <description><![CDATA[
         <p>Folds and unfolds logger method calls in Java and Kotlin files. Supports JUL, slf4j, Apache Commons Logging,
         log4j, Android Util Log, Timber and kotlin-logging out of the box. The names of the classes of other logging
@@ -18,6 +17,11 @@
     ]]></description>
 
     <change-notes><![CDATA[
+        <p>0.6.0-beta.1</p>
+        <ul>
+            <li>Migrate plugin from DevKit to Gradle.</li>
+            <li>Fix loading of canonical names from project settings. Issue #13.</li>
+        </ul>
         <p>0.5.2</p>
         <ul>
             <li>Fix deprecated method usage</li>
@@ -59,8 +63,6 @@
         </ul>
     ]]></change-notes>
 
-    <idea-version since-build="212.3116.43"/>
-
     <depends>com.intellij.modules.java</depends>
     <depends optional="true" config-file="kotlin.xml">org.jetbrains.kotlin</depends>
 
@@ -68,9 +70,10 @@
         <projectConfigurable groupId="tools" id="LoggerFoldingConfigurable"
                              instance="com.github.healarconr.loggerfolding.LoggerFoldingConfigurable"
                              displayName="Logger Folding"/>
-        <projectService serviceImplementation="com.github.healarconr.loggerfolding.LoggerFoldingProjectSettings"/>
-        <applicationService serviceImplementation="com.github.healarconr.loggerfolding.LoggerFoldingApplicationSettings"/>
-        <lang.foldingBuilder language="JAVA" implementationClass="com.github.healarconr.loggerfolding.JavaFoldingBuilder"/>
+        <applicationService
+                serviceImplementation="com.github.healarconr.loggerfolding.LoggerFoldingApplicationSettings"/>
+        <lang.foldingBuilder language="JAVA"
+                             implementationClass="com.github.healarconr.loggerfolding.JavaFoldingBuilder"/>
         <codeFoldingOptionsProvider instance="com.github.healarconr.loggerfolding.FoldingOptionsProvider"/>
     </extensions>
 
