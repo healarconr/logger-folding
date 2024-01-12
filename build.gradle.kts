@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.github.healarconr"
-version = "0.5.2"
+version = "0.6.0-beta.1"
 
 repositories {
     mavenCentral()
@@ -14,10 +14,11 @@ repositories {
 // Configure Gradle IntelliJ Plugin
 // Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
 intellij {
-    version.set("2023.1.5")
+    version.set("222.4554.10")
     type.set("IC") // Target IDE Platform
 
     plugins.set(listOf("com.intellij.java", "org.jetbrains.kotlin"))
+    updateSinceUntilBuild = false
 }
 
 tasks {
@@ -28,10 +29,6 @@ tasks {
     }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions.jvmTarget = "17"
-    }
-
-    patchPluginXml {
-        sinceBuild.set("231")
     }
 
     signPlugin {
