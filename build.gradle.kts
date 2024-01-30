@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.github.healarconr"
-version = "0.6.0-beta.1"
+version = "0.6.0"
 
 repositories {
     mavenCentral()
